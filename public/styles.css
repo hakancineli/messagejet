@@ -1,0 +1,643 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background-color: #f0f2f5;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.chat-container {
+    width: 90%;
+    height: 90vh;
+    display: flex;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.sidebar {
+    width: 30%;
+    background-color: #fff;
+    border-right: 1px solid #e0e0e0;
+    display: flex;
+    flex-direction: column;
+}
+
+.header {
+    background-color: #075e54;
+    color: white;
+    padding: 15px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.header-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.action-btn, .add-btn {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.2em;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 50%;
+    transition: background-color 0.3s;
+}
+
+.action-btn:hover, .add-btn:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.contact-search {
+    padding: 10px;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.contact-search input {
+    width: 100%;
+    padding: 8px;
+    border-radius: 20px;
+    border: 1px solid #e0e0e0;
+}
+
+.contacts {
+    flex: 1;
+    overflow-y: auto;
+}
+
+.contact {
+    padding: 10px;
+    border-bottom: 1px solid #e0e0e0;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+    user-select: none;
+}
+
+.contact:hover {
+    background-color: #f5f5f5;
+}
+
+.contact.active {
+    background-color: #e3f2fd;
+}
+
+.contact-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 5px;
+    pointer-events: none;
+}
+
+.contact-info h4 {
+    margin: 0;
+    font-size: 16px;
+    color: #333;
+    font-weight: bold;
+}
+
+.contact-phone {
+    font-size: 13px;
+    color: #666;
+    margin-bottom: 4px;
+}
+
+.last-message {
+    font-size: 14px;
+    color: #666;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+}
+
+.message-time {
+    font-size: 12px;
+    color: #999;
+    margin-top: 2px;
+}
+
+.message-direction {
+    font-size: 12px;
+    color: #075e54;
+    font-style: italic;
+}
+
+.chat-area {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background-color: #e5ddd5;
+}
+
+.chat-header {
+    padding: 15px;
+    background-color: #075e54;
+    color: white;
+}
+
+.messages {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.message {
+    max-width: 70%;
+    margin: 10px;
+    padding: 10px;
+    border-radius: 10px;
+    position: relative;
+    word-wrap: break-word;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.message.incoming {
+    background-color: #fff;
+    align-self: flex-start;
+    margin-right: auto;
+}
+
+.message.outgoing {
+    background-color: #dcf8c6;
+    align-self: flex-end;
+    margin-left: auto;
+}
+
+.message p {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.4;
+}
+
+.message-info {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 4px;
+    margin-top: 4px;
+}
+
+.message-time {
+    font-size: 11px;
+    color: #999;
+}
+
+.message-status {
+    display: inline-flex;
+    align-items: center;
+    font-size: 12px;
+    color: #999;
+}
+
+.message-status i {
+    font-size: 14px;
+}
+
+.message-status i.seen {
+    color: #34B7F1;
+}
+
+/* Medya mesajları için ek stiller */
+.message .media-container {
+    margin: -10px -10px 5px -10px;
+    border-radius: 10px 10px 0 0;
+}
+
+.message.incoming .media-container {
+    background: #fff;
+}
+
+.message.outgoing .media-container {
+    background: #dcf8c6;
+}
+
+.message .media-content {
+    border-radius: 10px 10px 0 0;
+    margin-bottom: 0;
+}
+
+.message .media-caption {
+    padding: 8px 10px;
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.4;
+}
+
+.message .document-preview {
+    margin: 0;
+    border-radius: 10px;
+}
+
+.message-input {
+    display: flex;
+    padding: 10px;
+    background-color: #f0f0f0;
+    align-items: center;
+    gap: 10px;
+}
+
+.message-input input {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    border-radius: 20px;
+    margin-right: 10px;
+}
+
+.message-input button {
+    padding: 10px 20px;
+    background-color: #075e54;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+}
+
+.message-input button:hover {
+    background-color: #128c7e;
+}
+
+.media-buttons {
+    display: flex;
+    gap: 8px;
+    padding: 8px;
+}
+
+.media-btn {
+    color: #075e54;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 50%;
+    transition: background-color 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.media-btn:hover {
+    background-color: rgba(7, 94, 84, 0.1);
+}
+
+.media-btn i {
+    font-size: 20px;
+}
+
+/* Medya içeriği stilleri */
+.media-container {
+    max-width: 300px;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 5px;
+    background: #fff;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.media-content {
+    max-width: 100%;
+    max-height: 300px;
+    border-radius: 8px 8px 0 0;
+    object-fit: contain;
+    background: #f5f5f5;
+    display: block;
+}
+
+.media-caption {
+    margin: 8px;
+    font-size: 14px;
+    color: #333;
+    word-break: break-word;
+}
+
+.document-preview {
+    display: flex;
+    align-items: center;
+    padding: 12px;
+    background: #f5f5f5;
+    border-radius: 8px;
+    margin: 8px;
+    transition: background-color 0.2s;
+}
+
+.document-preview:hover {
+    background: #e9e9e9;
+}
+
+.document-preview i {
+    font-size: 24px;
+    margin-right: 12px;
+    color: #075E54;
+}
+
+.document-preview .document-link {
+    color: #075E54;
+    text-decoration: none;
+    font-size: 14px;
+    word-break: break-word;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.document-preview .file-size {
+    color: #666;
+    font-size: 12px;
+    margin-top: 4px;
+}
+
+.error-message {
+    padding: 12px;
+    color: #721c24;
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    border-radius: 8px;
+    text-align: center;
+    margin: 8px;
+}
+
+/* Mesaj durumu ikonları */
+.message-status {
+    display: inline-flex;
+    align-items: center;
+    margin-left: 4px;
+    font-size: 12px;
+}
+
+.status-sent {
+    color: #999;
+}
+
+.status-delivered {
+    color: #666;
+}
+
+.status-seen {
+    color: #34B7F1;
+}
+
+.message-input.with-preview {
+    flex-wrap: wrap;
+}
+
+.media-preview-container {
+    width: 100%;
+    padding: 10px;
+    background: #f5f5f5;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+.media-preview {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.media-preview img,
+.media-preview video {
+    max-height: 100px;
+    border-radius: 4px;
+}
+
+.remove-media {
+    cursor: pointer;
+    color: #dc3545;
+    font-size: 20px;
+    padding: 4px;
+}
+
+.remove-media:hover {
+    color: #c82333;
+}
+
+/* Modal Stilleri */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+    background-color: #fff;
+    margin: 15% auto;
+    padding: 20px;
+    border-radius: 10px;
+    width: 80%;
+    max-width: 500px;
+    position: relative;
+}
+
+.close {
+    position: absolute;
+    right: 20px;
+    top: 15px;
+    font-size: 24px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+#contact-form button {
+    background-color: #075e54;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+#confirm-delete {
+    background-color: #d9534f;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#cancel-delete {
+    background-color: #f0f0f0;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+/* Kişi listesi öğeleri için silme butonu */
+.contact-actions {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: none;
+}
+
+.contact:hover .contact-actions {
+    display: flex;
+}
+
+/* Tab stilleri */
+.tabs {
+    display: flex;
+    border-bottom: 1px solid #ddd;
+    margin-bottom: 15px;
+}
+
+.tab {
+    padding: 10px 15px;
+    cursor: pointer;
+}
+
+.tab.active {
+    border-bottom: 2px solid #075e54;
+    color: #075e54;
+    font-weight: bold;
+}
+
+.tab-content {
+    padding: 10px 0;
+}
+
+.tab-pane {
+    display: none;
+}
+
+.tab-pane.active {
+    display: block;
+}
+
+/* Status mesajı stilleri */
+.status-message {
+    margin-top: 10px;
+    padding: 8px;
+    border-radius: 4px;
+    display: none;
+}
+
+.status-success {
+    display: block;
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.status-error {
+    display: block;
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+/* Primary buton stili */
+.primary-btn {
+    background-color: #075e54;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.primary-btn:hover {
+    background-color: #064942;
+}
+
+/* Toplu Mesaj Modal Stilleri */
+.progress-container {
+    margin-top: 15px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 10px;
+}
+
+.progress-bar {
+    height: 20px;
+    background-color: #075e54;
+    width: 0%;
+    border-radius: 4px;
+    transition: width 0.3s ease;
+}
+
+.progress-text {
+    text-align: center;
+    margin-top: 5px;
+    font-size: 14px;
+    color: #666;
+}
+
+#bulk-message-form .form-group {
+    margin-bottom: 15px;
+}
+
+#bulk-message-form small {
+    display: block;
+    color: #666;
+    margin-top: 5px;
+    font-size: 12px;
+}
+
+#bulk-message-form textarea {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    resize: vertical;
+}
+
+#send-bulk-message {
+    background-color: #075e54;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 100%;
+}
+
+#send-bulk-message:hover {
+    background-color: #064d44;
+}

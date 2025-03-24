@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WhatsApp Mesajlaşma</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body>
+    <div class="chat-container">
+        <div class="sidebar">
+            <div class="header">
+                <div class="header-buttons">
+                    <button id="bulk-message-btn" class="action-btn" title="Toplu Mesaj"><i class="fas fa-users"></i></button>
+                    <button id="settings-btn" class="action-btn" title="Ayarlar"><i class="fas fa-cog"></i></button>
+                    <button id="add-contact-btn" class="add-btn" title="Kişi Ekle"><i class="fas fa-plus"></i></button>
+                </div>
+            </div>
+            <div class="contact-search">
+                <input type="text" id="contact-search" placeholder="Kişi ara...">
+            </div>
+            <div class="contacts" id="contacts-list">
+                <!-- Kişiler burada listelenecek -->
+            </div>
+        </div>
+        <div class="chat-area">
+            <div class="chat-header">
+                <h3 id="current-contact">Seçili kişi yok</h3>
+                <div class="header-actions">
+                    <button id="edit-contact-btn" class="action-btn" disabled><i class="fas fa-edit"></i></button>
+                    <button id="delete-contact-btn" class="action-btn" disabled><i class="fas fa-trash"></i></button>
+                </div>
+            </div>
+            <div class="messages" id="messages-container">
+                <!-- Mesajlar burada gösterilecek -->
+            </div>
+            <div class="message-input">
+                <div class="media-buttons">
+                    <label for="image-upload" class="media-btn" title="Resim Gönder">
+                        <i class="fas fa-image"></i>
+                        <input type="file" id="image-upload" accept="image/*" style="display: none;">
+                    </label>
+                    <label for="video-upload" class="media-btn" title="Video Gönder">
+                        <i class="fas fa-video"></i>
+                        <input type="file" id="video-upload" accept="video/*" style="display: none;">
+                    </label>
+                    <label for="audio-upload" class="media-btn" title="Sesli Mesaj Gönder">
+                        <i class="fas fa-microphone"></i>
+                        <input type="file" id="audio-upload" accept="audio/*" style="display: none;">
+                    </label>
+                    <label for="document-upload" class="media-btn" title="Dosya Gönder">
+                        <i class="fas fa-file"></i>
+                        <input type="file" id="document-upload" accept=".pdf,.doc,.docx,.xls,.xlsx" style="display: none;">
+                    </label>
+                </div>
+                <input type="text" id="message-input" placeholder="Mesaj yazın...">
+                <button id="send-button">Gönder</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Kişi Ekleme/Düzenleme Modal -->
+    <div id="contact-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2 id="modal-title">Kişi Ekle</h2>
+            <form id="contact-form">
+                <div class="form-group">
+                    <label for="contact-phone">Telefon Numarası:</label>
+                    <input type="text" id="contact-phone" placeholder="+905xxxxxxxxx" required>
+                </div>
+                <div class="form-group">
+                    <label for="contact-name">İsim:</label>
+                    <input type="text" id="contact-name" placeholder="İsim (isteğe bağlı)">
+                </div>
+                <button type="submit" id="save-contact">Kaydet</button>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Silme Onay Modal -->
+    <div id="delete-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Kişiyi Sil</h2>
+            <p>Bu kişiyi silmek istediğinizden emin misiniz?</p>
+            <div class="modal-actions">
+                <button id="confirm-delete">Evet, Sil</button>
+                <button id="cancel-delete">İptal</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Ayarlar Modal -->
+    <div id="settings-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Ayarlar</h2>
+            <div class="tabs">
+                <div class="tab active" data-tab="webhook">Webhook</div>
+                <!-- İleride başka tablar eklenebilir -->
+            </div>
+            <div class="tab-content">
+                <div class="tab-pane active" id="webhook-tab">
+                    <div class="form-group">
+                        <label for="webhook-url">Lütfen mevcut domaininizi yazın:</label>
+                        <input type="text" id="webhook-url" placeholder="https://your-domain.ngrok-free.app">
+                        <small>Not: Girdiğiniz URL'nin sonuna otomatik olarak /webhook eklenecektir.</small>
+                    </div>
+                    <button id="update-webhook" class="primary-btn">Güncelle</button>
+                    <div id="webhook-status" class="status-message"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Toplu Mesaj Modal -->
+    <div id="bulk-message-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Toplu Mesaj Gönder</h2>
+            <form id="bulk-message-form">
+                <div class="form-group">
+                    <label for="excel-file">Excel Dosyası:</label>
+                    <input type="file" id="excel-file" accept=".xlsx,.xls" required>
+                    <small>Excel dosyanızda "phone" ve "name" sütunları olmalıdır.</small>
+                </div>
+                <div class="form-group">
+                    <label for="bulk-message">Mesaj:</label>
+                    <textarea id="bulk-message" rows="4" placeholder="Göndermek istediğiniz mesajı yazın..." required></textarea>
+                </div>
+                <div class="form-group">
+                    <div class="progress-container" style="display: none;">
+                        <div class="progress-bar"></div>
+                        <div class="progress-text">0/0 mesaj gönderildi</div>
+                    </div>
+                </div>
+                <button type="submit" id="send-bulk-message">Gönder</button>
+            </form>
+        </div>
+    </div>
+    
+    <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,6 @@
+version: "2"
+authtoken: "" # Buraya ngrok auth token'ınızı ekleyin
+tunnels:
+  webhook:
+    addr: 3000
+    proto: http 

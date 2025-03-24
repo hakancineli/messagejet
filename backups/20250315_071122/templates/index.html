@@ -1,0 +1,1156 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MessageJet - WhatsApp Mesaj Takip</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #00a884;
+            --secondary-color: #008069;
+            --bg-color: #efeae2;
+            --chat-bg: #f0f2f5;
+            --outgoing-bg: #d9fdd3;
+            --incoming-bg: #ffffff;
+            --text-primary: #111b21;
+            --text-secondary: #667781;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-color);
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .app-container {
+            display: flex;
+            height: 100vh;
+            background-color: var(--chat-bg);
+        }
+
+        /* Sol Sidebar */
+        .sidebar {
+            width: 400px;
+            background-color: #fff;
+            border-right: 1px solid #e0e0e0;
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+        }
+
+        .sidebar-header {
+            background-color: var(--secondary-color);
+            padding: 16px;
+            color: white;
+        }
+
+        .sidebar-title {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .action-button {
+            padding: 8px 16px;
+            border-radius: 8px;
+            border: none;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            background-color: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        .action-button:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .search-container {
+            padding: 12px;
+            background-color: #fff;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .search-box {
+            background-color: var(--chat-bg);
+            border-radius: 8px;
+            padding: 8px 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .search-box input {
+            border: none;
+            background: none;
+            outline: none;
+            width: 100%;
+            font-size: 15px;
+        }
+
+        .contacts-list {
+            flex: 1;
+            overflow-y: auto;
+            background-color: #fff;
+        }
+
+        .contact-item {
+            padding: 12px 16px;
+            border-bottom: 1px solid #f0f0f0;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .contact-item:hover {
+            background-color: #f5f6f6;
+        }
+
+        .contact-item.selected {
+            background-color: #f0f2f5;
+        }
+
+        .contact-name {
+            font-size: 16px;
+            font-weight: 500;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+
+        .contact-last-message {
+            font-size: 14px;
+            color: var(--text-secondary);
+            display: -webkit-box;
+            -webkit-line-clamp: 1;
+            line-clamp: 1;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* Sağ İçerik */
+        .content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background-color: var(--bg-color);
+        }
+
+        .chat-header {
+            background-color: var(--secondary-color);
+            padding: 16px;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .chat-title {
+            font-size: 18px;
+            font-weight: 500;
+        }
+
+        .chat-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px;
+            background-color: #efeae2;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .message-input-container {
+            background-color: #f0f2f5;
+            padding: 16px;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .message-input-wrapper {
+            background-color: #fff;
+            border-radius: 24px;
+            padding: 8px 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .message-type-select {
+            min-width: 120px;
+            border: none;
+            background-color: transparent;
+            font-size: 15px;
+            color: var(--text-primary);
+            padding: 8px;
+            border-radius: 8px;
+            outline: none;
+        }
+
+        .message-input {
+            flex: 1;
+            border: none;
+            background: none;
+            outline: none;
+            padding: 8px;
+            font-size: 15px;
+        }
+
+        .send-button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .send-button:hover {
+            background-color: var(--secondary-color);
+        }
+
+        .message-bubble {
+            max-width: 65%;
+            margin-bottom: 12px;
+            padding: 12px;
+            border-radius: 12px;
+            word-wrap: break-word;
+            position: relative;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+            display: block;
+        }
+
+        .message-bubble.outgoing {
+            background-color: #dcf8c6;
+            margin-left: auto;
+            margin-right: 16px;
+            border-top-right-radius: 4px;
+            align-self: flex-end;
+        }
+
+        .message-bubble.incoming {
+            background-color: #ffffff;
+            margin-right: auto;
+            margin-left: 16px;
+            border-top-left-radius: 4px;
+            align-self: flex-start;
+        }
+
+        .message-content {
+            font-size: 14px;
+            color: #111b21;
+            line-height: 1.4;
+        }
+
+        .message-meta {
+            font-size: 11px;
+            color: #667781;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 4px;
+            margin-top: 4px;
+        }
+
+        .message-status {
+            display: flex;
+            align-items: center;
+            gap: 2px;
+        }
+
+        .status-icon {
+            font-size: 14px;
+        }
+
+        .status-sent { color: #8696a0; }
+        .status-delivered { color: #53bdeb; }
+        .status-read { color: #25d366; }
+        .status-failed { color: #f15c6d; }
+
+        .media-preview {
+            max-width: 300px;
+            max-height: 200px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+        }
+
+        .document-link {
+            display: flex;
+            align-items: center;
+            padding: 8px;
+            background-color: rgba(0, 128, 105, 0.1);
+            border-radius: 8px;
+            color: var(--primary-color);
+            text-decoration: none;
+            margin-bottom: 8px;
+        }
+
+        .document-link i {
+            margin-right: 8px;
+            font-size: 20px;
+        }
+
+        .empty-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            color: var(--text-secondary);
+            text-align: center;
+            padding: 32px;
+        }
+
+        .empty-state i {
+            font-size: 64px;
+            color: var(--primary-color);
+            margin-bottom: 16px;
+        }
+
+        .empty-state h3 {
+            font-size: 24px;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+
+        .empty-state p {
+            font-size: 16px;
+            max-width: 400px;
+        }
+
+        /* Modal Stilleri */
+        .modal-content {
+            border-radius: 12px;
+            border: none;
+        }
+
+        .modal-header {
+            background-color: var(--secondary-color);
+            color: white;
+            border-top-left-radius: 12px;
+            border-top-right-radius: 12px;
+            padding: 16px;
+        }
+
+        .modal-body {
+            padding: 24px;
+        }
+
+        .form-label {
+            color: var(--text-primary);
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+
+        .form-control {
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+            padding: 12px;
+            font-size: 15px;
+        }
+
+        .form-control:focus {
+            border-color: var(--primary-color);
+            box-shadow: none;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 500;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--secondary-color);
+        }
+
+        .btn-secondary {
+            background-color: #e0e0e0;
+            border: none;
+            color: var(--text-primary);
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 500;
+        }
+
+        .btn-secondary:hover {
+            background-color: #d0d0d0;
+            color: var(--text-primary);
+        }
+
+        .message-date-separator {
+            text-align: center;
+            margin: 24px 0;
+            width: 100%;
+            align-self: center;
+        }
+
+        .message-date-separator span {
+            background-color: rgba(225, 245, 254, 0.92);
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            color: #54656f;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        .unread-badge {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            margin-left: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sol Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-title">MessageJet</div>
+                <div class="action-buttons">
+                    <button class="action-button" onclick="showAddContactModal()">
+                        <i class="fas fa-user-plus"></i>
+                        Yeni Numara
+                    </button>
+                    <button class="action-button" onclick="showBulkMessageModal()">
+                        <i class="fas fa-users"></i>
+                        Toplu Mesaj
+                    </button>
+                </div>
+            </div>
+            <div class="search-container">
+                <div class="search-box">
+                    <i class="fas fa-search" style="color: var(--text-secondary)"></i>
+                    <input type="text" placeholder="Mesajlarda ara..." id="searchInput" onkeyup="filterMessages()">
+                </div>
+            </div>
+            <div class="contacts-list" id="contacts-list">
+                <!-- Kişiler dinamik olarak eklenecek -->
+            </div>
+        </div>
+
+        <!-- Sağ İçerik -->
+        <div class="content">
+            <div class="chat-header">
+                <div class="chat-title" id="selectedContact">Mesaj seçilmedi</div>
+                <button class="action-button" onclick="refreshMessages()">
+                    <i class="fas fa-sync"></i>
+                    Yenile
+                </button>
+            </div>
+            <div class="chat-container" id="messageDetails">
+                <div class="empty-state">
+                    <i class="fas fa-comments"></i>
+                    <h3>Hoş Geldiniz</h3>
+                    <p>Mesajları görüntülemek için sol taraftan bir kişi seçin</p>
+                </div>
+            </div>
+            <div class="message-input-container" id="messageInputContainer" style="display: none;">
+                <div class="message-input-wrapper">
+                    <select class="message-type-select" id="messageType">
+                        <option value="text">Normal Mesaj</option>
+                        <option value="template" disabled>Template Mesaj Yükleniyor...</option>
+                    </select>
+                    <input type="text" class="message-input" id="messageInput" placeholder="Mesaj yazın..." onkeypress="handleKeyPress(event)">
+                    <button class="send-button" id="sendButton" onclick="sendMessage()">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+                <small class="text-muted mt-2" id="messageTypeInfo" style="margin-left: 16px;">
+                    Normal metin mesajı
+                </small>
+            </div>
+        </div>
+    </div>
+
+    <!-- Yeni Numara Modal -->
+    <div class="modal fade" id="addContactModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Yeni Numara Ekle</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Telefon Numarası</label>
+                        <input type="text" class="form-control" id="newContactPhone" placeholder="Örn: 905545832034">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">İsim (Opsiyonel)</label>
+                        <input type="text" class="form-control" id="newContactName" placeholder="Kişi adı">
+                    </div>
+                    <div class="d-flex justify-content-end gap-2">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
+                        <button type="button" class="btn btn-primary" onclick="addNewContact()">Ekle</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toplu Mesaj Modal -->
+    <div class="modal fade" id="bulkMessageModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Toplu Mesaj Gönder</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="bulkMessageForm">
+                        <div class="mb-3">
+                            <label class="form-label">Excel Dosyası</label>
+                            <input type="file" class="form-control" id="excelFile" accept=".xlsx,.xls" required>
+                            <small class="text-muted">Excel dosyanızda "phone" sütunu bulunmalıdır.</small>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Mesaj Tipi</label>
+                            <select class="form-select" id="bulkMessageType">
+                                <option value="template">Template Mesaj</option>
+                                <option value="text">Normal Mesaj</option>
+                            </select>
+                        </div>
+                        <div class="mb-3" id="bulkMessageTextDiv" style="display: none;">
+                            <label class="form-label">Mesaj Metni</label>
+                            <textarea class="form-control" id="bulkMessageText" rows="3" placeholder="Toplu gönderilecek mesaj metnini yazın..."></textarea>
+                        </div>
+                        <div class="progress mb-2" style="display: none;">
+                            <div class="progress-bar" role="progressbar" style="width: 0%"></div>
+                        </div>
+                        <div id="progressText" class="text-center mb-3" style="display: none;">
+                            0/0 mesaj gönderildi
+                        </div>
+                        <div class="d-flex justify-content-end gap-2">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
+                            <button type="button" class="btn btn-primary" onclick="sendBulkMessages()">Gönder</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        let messages = [];
+        let selectedPhone = null;
+        let lastMessageCount = 0;
+
+        function updateMessages() {
+            fetch('/api/messages')
+                .then(response => response.json())
+                .then(data => {
+                    messages = data;
+                    console.log('Tüm mesajlar:', messages);
+                    
+                    // Yeni mesaj kontrolü
+                    const newMessageCount = messages.length;
+                    if (newMessageCount > lastMessageCount) {
+                        console.log('Yeni mesaj geldi:', newMessageCount - lastMessageCount, 'adet');
+                        new Audio('/static/notification.mp3').play().catch(() => {}); // Bildirim sesi
+                    }
+                    lastMessageCount = newMessageCount;
+                    
+                    renderMessages();
+                    
+                    if (selectedPhone) {
+                        updateMessageDetails(selectedPhone);
+                    }
+                })
+                .catch(error => {
+                    console.error('Mesajları güncelleme hatası:', error);
+                });
+        }
+
+        function renderMessages() {
+            const messageList = document.getElementById('contacts-list');
+            if (!messageList) return;
+            
+            messageList.innerHTML = '';
+
+            // Benzersiz telefon numaralarını bul
+            const uniquePhones = [...new Set(messages.map(message => message.phone))];
+            
+            // Her telefon numarası için son mesajı ve okunmamış mesaj sayısını hesapla
+            const phoneWithLastMessage = uniquePhones.map(phone => {
+                const phoneMessages = messages.filter(m => m.phone === phone);
+                const lastMessage = phoneMessages.sort((a, b) => 
+                    new Date(b.timestamp) - new Date(a.timestamp)
+                )[0];
+                
+                const unreadCount = phoneMessages.filter(m => 
+                    m.direction === 'incoming' && m.status !== 'read'
+                ).length;
+                
+                return {
+                    phone,
+                    lastMessage,
+                    unreadCount,
+                    totalMessages: phoneMessages.length
+                };
+            }).sort((a, b) => 
+                new Date(b.lastMessage.timestamp) - new Date(a.lastMessage.timestamp)
+            );
+
+            // Her telefon için bir kişi öğesi oluştur
+            phoneWithLastMessage.forEach(item => {
+                const contactDiv = document.createElement('div');
+                contactDiv.className = `contact-item ${item.phone === selectedPhone ? 'selected' : ''}`;
+                contactDiv.onclick = () => selectContact(item.phone);
+                
+                const lastMessageTime = formatMessageTime(new Date(item.lastMessage.timestamp));
+                
+                contactDiv.innerHTML = `
+                    <div class="contact-header">
+                        <div class="contact-name">${item.lastMessage.name || item.phone}</div>
+                        <div class="contact-time">${lastMessageTime}</div>
+                    </div>
+                    <div class="contact-last-message">
+                        <span class="message-preview">${item.lastMessage.message}</span>
+                        ${item.unreadCount > 0 ? `<span class="unread-badge">${item.unreadCount}</span>` : ''}
+                    </div>
+                `;
+                
+                messageList.appendChild(contactDiv);
+            });
+        }
+
+        function formatMessageTime(date) {
+            const now = new Date();
+            const yesterday = new Date(now);
+            yesterday.setDate(yesterday.getDate() - 1);
+            
+            if (date.toDateString() === now.toDateString()) {
+                return date.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' });
+            } else if (date.toDateString() === yesterday.toDateString()) {
+                return 'Dün';
+            } else {
+                return date.toLocaleDateString('tr-TR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+            }
+        }
+
+        function selectContact(phone) {
+            selectedPhone = phone;
+            const selectedMsg = messages.find(m => m.phone === phone);
+            if (!selectedMsg) return;
+
+            // Seçili mesajı güncelle
+            document.querySelectorAll('.contact-item').forEach(el => el.classList.remove('selected'));
+            document.querySelector(`.contact-item[onclick*="${phone}"]`)?.classList.add('selected');
+
+            // Başlığı güncelle
+            document.getElementById('selectedContact').textContent = selectedMsg.name || phone;
+            
+            // Mesaj detaylarını göster
+            updateMessageDetails(phone);
+            
+            // Mesaj giriş alanını göster
+            document.getElementById('messageInputContainer').style.display = 'block';
+        }
+
+        function updateMessageDetails(phone) {
+            const detailsContainer = document.getElementById('messageDetails');
+            detailsContainer.innerHTML = '';
+
+            const contactMessages = messages
+                .filter(m => m.phone === phone || m.phone === '+' + phone || phone === '+' + m.phone)
+                .sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+
+            console.log('Seçili kişinin mesajları:', contactMessages);
+
+            if (contactMessages.length === 0) {
+                detailsContainer.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-comments"></i>
+                        <h3>Henüz mesaj yok</h3>
+                        <p>Bu kişiyle henüz mesajlaşma geçmişiniz bulunmuyor.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            let lastDate = null;
+            contactMessages.forEach(msg => {
+                const messageDate = new Date(msg.timestamp);
+                const currentDate = messageDate.toLocaleDateString('tr-TR');
+                
+                if (currentDate !== lastDate) {
+                    const dateDiv = document.createElement('div');
+                    dateDiv.className = 'message-date-separator';
+                    dateDiv.innerHTML = `<span>${formatMessageDate(messageDate)}</span>`;
+                    detailsContainer.appendChild(dateDiv);
+                    lastDate = currentDate;
+                }
+                
+                // Mesaj yönünü kontrol et
+                const direction = (msg.direction || '').toLowerCase();
+                console.log(`Mesaj detayları:`, {
+                    id: msg.id,
+                    direction: direction,
+                    message: msg.message,
+                    timestamp: msg.timestamp,
+                    status: msg.status
+                });
+                
+                const isOutgoing = direction === 'outgoing';
+                const messageElement = document.createElement('div');
+                messageElement.className = `message-bubble ${isOutgoing ? 'outgoing' : 'incoming'}`;
+                
+                let messageContent = msg.message || '';
+                if (msg.media_type) {
+                    messageContent = getMediaContent(msg) + messageContent;
+                }
+                
+                // Timestamp'i Türkiye saatine göre ayarla
+                const messageTime = new Date(msg.timestamp).toLocaleTimeString('tr-TR', {
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    hour12: false,
+                    timeZone: 'Europe/Istanbul'
+                });
+                
+                messageElement.innerHTML = `
+                    <div class="message-content">
+                        ${messageContent}
+                        <div class="message-meta">
+                            <span class="time">${messageTime}</span>
+                            ${isOutgoing ? `
+                                <span class="message-status ${getStatusClass(msg.status)}">
+                                    <i class="fas fa-check-double"></i>
+                                </span>
+                            ` : ''}
+                        </div>
+                    </div>
+                `;
+                
+                detailsContainer.appendChild(messageElement);
+            });
+
+            detailsContainer.scrollTop = detailsContainer.scrollHeight;
+            markMessagesAsRead(phone);
+        }
+
+        function formatMessageDate(date) {
+            const today = new Date();
+            const yesterday = new Date(today);
+            yesterday.setDate(yesterday.getDate() - 1);
+
+            if (date.toDateString() === today.toDateString()) {
+                return 'Bugün';
+            } else if (date.toDateString() === yesterday.toDateString()) {
+                return 'Dün';
+            } else {
+                return date.toLocaleDateString('tr-TR', {
+                    day: 'numeric',
+                    month: 'long',
+                    year: 'numeric'
+                });
+            }
+        }
+
+        function getMediaContent(message) {
+            switch(message.media_type) {
+                case 'image':
+                    return `<img src="${message.media_url}" alt="Resim" class="media-preview">`;
+                case 'video':
+                    return `<video src="${message.media_url}" controls class="media-preview"></video>`;
+                case 'document':
+                    return `
+                        <a href="${message.media_url}" target="_blank" class="document-link">
+                            <i class="fas fa-file"></i>
+                            ${message.media_filename || 'Döküman'}
+                        </a>
+                    `;
+                default:
+                    return '';
+            }
+        }
+
+        function getStatusClass(status) {
+            switch(status?.toLowerCase()) {
+                case 'sent': return 'status-sent';
+                case 'delivered': return 'status-delivered';
+                case 'read': return 'status-read';
+                case 'failed': return 'status-failed';
+                default: return 'status-pending';
+            }
+        }
+
+        function formatDate(timestamp) {
+            if (!timestamp) return '';
+            const date = new Date(timestamp);
+            return date.toLocaleString('tr-TR', {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+
+        function filterMessages() {
+            const searchText = document.getElementById('searchInput').value.toLowerCase();
+            const filteredMessages = messages.filter(message => 
+                message.name.toLowerCase().includes(searchText) || 
+                message.phone.includes(searchText)
+            );
+            renderFilteredMessages(filteredMessages);
+        }
+
+        function renderFilteredMessages(filteredMessages) {
+            const messageList = document.getElementById('contacts-list');
+            messageList.innerHTML = '';
+
+            filteredMessages.forEach(message => {
+                const statusClass = getStatusClass(message.status);
+                const messageElement = document.createElement('div');
+                messageElement.className = `contact-item ${selectedPhone === message.phone ? 'selected' : ''}`;
+                messageElement.onclick = () => selectContact(message.phone);
+                
+                messageElement.innerHTML = `
+                    <div class="contact-info">
+                        <div class="name">${message.name}</div>
+                        <div class="phone">${message.phone}</div>
+                        <div class="status ${statusClass}">
+                            <i class="fas fa-circle"></i> ${message.status}
+                        </div>
+                        <div class="time">${formatDate(message.timestamp)}</div>
+                    </div>
+                `;
+                messageList.appendChild(messageElement);
+            });
+        }
+
+        function refreshMessages() {
+            updateMessages();
+        }
+
+        // Mesaj gönderme fonksiyonu
+        async function sendMessage() {
+            const messageType = document.getElementById('messageType').value;
+            const messageInput = document.getElementById('messageInput');
+            const message = messageInput.value.trim();
+            const sendButton = document.getElementById('sendButton');
+            
+            if (!selectedPhone) {
+                alert('Lütfen bir kişi seçin');
+                return;
+            }
+            
+            if (messageType === 'text' && !message) {
+                alert('Lütfen bir mesaj yazın');
+                return;
+            }
+            
+            sendButton.disabled = true;
+            sendButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+            
+            try {
+                let payload = {
+                    phone: selectedPhone,
+                    message: message,
+                    type: messageType
+                };
+                
+                if (messageType.startsWith('template:')) {
+                    const [_, templateName, language] = messageType.split(':');
+                    payload = {
+                        ...payload,
+                        type: 'template',
+                        template_name: templateName,
+                        language: language
+                    };
+                }
+                
+                const response = await fetch('/send_message', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(payload)
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    messageInput.value = '';
+                    await updateMessages();
+                } else {
+                    alert('Mesaj gönderilemedi: ' + data.message);
+                }
+            } catch (error) {
+                alert('Mesaj gönderirken bir hata oluştu');
+                console.error('Mesaj gönderme hatası:', error);
+            } finally {
+                sendButton.disabled = false;
+                sendButton.innerHTML = '<i class="fas fa-paper-plane"></i>';
+            }
+        }
+
+        function handleKeyPress(event) {
+            if (event.key === 'Enter' && !event.shiftKey) {
+                event.preventDefault();
+                sendMessage();
+            }
+        }
+
+        function sendNewMessages() {
+            fetch('/send_message', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    phone: selectedPhone,
+                    message: 'Template mesajı'
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    updateMessages();
+                } else {
+                    alert('Mesaj gönderirken bir hata oluştu: ' + data.message);
+                }
+            })
+            .catch(error => {
+                alert('Mesaj gönderirken bir hata oluştu');
+            });
+        }
+
+        function showAddContactModal() {
+            const modal = new bootstrap.Modal(document.getElementById('addContactModal'));
+            modal.show();
+        }
+
+        function addNewContact() {
+            const phone = document.getElementById('newContactPhone').value.trim();
+            const name = document.getElementById('newContactName').value.trim() || 'Yeni Kişi';
+            
+            if (!phone) {
+                alert('Lütfen telefon numarası girin');
+                return;
+            }
+            
+            fetch('/api/contacts', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    phone: phone,
+                    name: name
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    bootstrap.Modal.getInstance(document.getElementById('addContactModal')).hide();
+                    document.getElementById('newContactPhone').value = '';
+                    document.getElementById('newContactName').value = '';
+                    updateMessages();
+                } else {
+                    alert(data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Bir hata oluştu');
+            });
+        }
+
+        function showBulkMessageModal() {
+            const modal = new bootstrap.Modal(document.getElementById('bulkMessageModal'));
+            modal.show();
+        }
+
+        // Mesaj tipi değiştiğinde metin alanını göster/gizle
+        document.getElementById('bulkMessageType').addEventListener('change', function() {
+            const textDiv = document.getElementById('bulkMessageTextDiv');
+            textDiv.style.display = this.value === 'text' ? 'block' : 'none';
+        });
+
+        function sendBulkMessages() {
+            const fileInput = document.getElementById('excelFile');
+            const messageType = document.getElementById('bulkMessageType').value;
+            const messageText = document.getElementById('bulkMessageText').value;
+            const progressBar = document.querySelector('.progress');
+            const progressBarInner = document.querySelector('.progress-bar');
+            const progressText = document.getElementById('progressText');
+
+            if (!fileInput.files[0]) {
+                alert('Lütfen bir Excel dosyası seçin');
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('file', fileInput.files[0]);
+            formData.append('message_type', messageType);
+            if (messageType === 'text') {
+                formData.append('message_text', messageText);
+            }
+
+            progressBar.style.display = 'block';
+            progressText.style.display = 'block';
+            progressBarInner.style.width = '0%';
+            progressText.textContent = 'Mesajlar gönderiliyor...';
+
+            fetch('/send_bulk_messages', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert(data.message);
+                    if (data.failed_numbers && data.failed_numbers.length > 0) {
+                        alert('Başarısız numaralar: ' + data.failed_numbers.join(', '));
+                    }
+                } else {
+                    alert('Hata: ' + data.message);
+                }
+                progressBar.style.display = 'none';
+                progressText.style.display = 'none';
+                $('#bulkMessageModal').modal('hide');
+            })
+            .catch(error => {
+                console.error('Hata:', error);
+                alert('Bir hata oluştu: ' + error);
+                progressBar.style.display = 'none';
+                progressText.style.display = 'none';
+            });
+        }
+
+        // Template'leri yükle
+        async function loadTemplates() {
+            try {
+                const response = await fetch('/api/templates');
+                const data = await response.json();
+                
+                if (data.success) {
+                    const messageType = document.getElementById('messageType');
+                    const templates = data.templates;
+                    
+                    // Template seçeneklerini güncelle
+                    const textOption = messageType.options[0]; // Normal mesaj seçeneğini koru
+                    messageType.innerHTML = ''; // Diğer seçenekleri temizle
+                    messageType.appendChild(textOption);
+                    
+                    templates.forEach(template => {
+                        const option = document.createElement('option');
+                        option.value = `template:${template.name}:${template.language}`;
+                        option.textContent = `Template: ${template.name} (${template.language})`;
+                        messageType.appendChild(option);
+                    });
+                    
+                    // Template yoksa uyarı göster
+                    if (templates.length === 0) {
+                        const option = document.createElement('option');
+                        option.value = 'template';
+                        option.disabled = true;
+                        option.textContent = 'Onaylı template bulunamadı';
+                        messageType.appendChild(option);
+                    }
+                } else {
+                    console.error('Template yükleme hatası:', data.message);
+                    // Hata durumunda varsayılan seçenek göster
+                    const option = document.createElement('option');
+                    option.value = 'template';
+                    option.disabled = true;
+                    option.textContent = 'Template\'ler yüklenemedi';
+                    messageType.appendChild(option);
+                }
+            } catch (error) {
+                console.error('Template yükleme hatası:', error);
+            }
+        }
+
+        // Sayfa yüklendiğinde
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('Sayfa yüklendi, mesajlar güncelleniyor...');
+            updateMessages();
+            loadTemplates();
+            
+            // Her 3 saniyede bir mesajları güncelle
+            setInterval(() => {
+                console.log('Otomatik mesaj güncellemesi yapılıyor...');
+                updateMessages();
+            }, 3000);
+        });
+
+        // Mesaj tipi değiştiğinde
+        document.getElementById('messageType').addEventListener('change', function() {
+            const messageInput = document.getElementById('messageInput');
+            const messageTypeInfo = document.getElementById('messageTypeInfo');
+            
+            if (this.value === 'text') {
+                messageInput.placeholder = 'Mesajınızı yazın...';
+                messageInput.disabled = false;
+                messageTypeInfo.textContent = 'Normal metin mesajı';
+            } else if (this.value.startsWith('template:')) {
+                const [_, templateName, language] = this.value.split(':');
+                messageInput.placeholder = 'Template mesajı gönderilecek';
+                messageInput.value = '';
+                messageInput.disabled = true;
+                messageTypeInfo.textContent = `Template mesajı seçildi: ${templateName} (${language})`;
+            }
+        });
+
+        document.getElementById('bulkMessageForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            const statusDiv = document.getElementById('bulkMessageStatus');
+            statusDiv.textContent = 'Mesajlar gönderiliyor...';
+            
+            try {
+                const response = await fetch('/send_bulk_messages', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const result = await response.json();
+                statusDiv.textContent = result.message;
+            } catch (error) {
+                statusDiv.textContent = 'Hata oluştu: ' + error.message;
+            }
+        });
+
+        function markMessagesAsRead(phone) {
+            const unreadMessages = messages.filter(m => 
+                m.phone === phone && 
+                m.direction === 'incoming' && 
+                m.status !== 'read'
+            );
+
+            if (unreadMessages.length > 0) {
+                // Burada mesajları okundu olarak işaretlemek için bir API çağrısı yapılabilir
+                console.log(`${unreadMessages.length} mesaj okundu olarak işaretlendi`);
+            }
+        }
+    </script>
+</body>
+</html> 

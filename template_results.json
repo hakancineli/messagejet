@@ -1,0 +1,142 @@
+[
+  {
+    "success": true,
+    "phone": "201010010017",
+    "name": "Müşteri 1",
+    "message_id": "wamid.HBgMMjAxMDEwMDEwMDE3FQIAERgSOTUwRDczNkJCM0EwN0ZFMDA3AA==",
+    "timestamp": "2025-03-24T09:38:07.064810"
+  },
+  {
+    "success": true,
+    "phone": "201010021179",
+    "name": "Müşteri 2",
+    "message_id": "wamid.HBgMMjAxMDEwMDIxMTc5FQIAERgSQTUxOTdCRURFRDMxRDRDOTNGAA==",
+    "timestamp": "2025-03-24T09:38:07.786705"
+  },
+  {
+    "success": true,
+    "phone": "201010334888",
+    "name": "Müşteri 3",
+    "message_id": "wamid.HBgMMjAxMDEwMzM0ODg4FQIAERgSOTM4QzFBRUIwMTgxMTM2OEUzAA==",
+    "timestamp": "2025-03-24T09:38:08.572824"
+  },
+  {
+    "success": true,
+    "phone": "201010448336",
+    "name": "Müşteri 4",
+    "message_id": "wamid.HBgMMjAxMDEwNDQ4MzM2FQIAERgSQ0U0REZCQjc4NEZCMjBBRkYyAA==",
+    "timestamp": "2025-03-24T09:38:09.448364"
+  },
+  {
+    "success": true,
+    "phone": "201010672721",
+    "name": "Müşteri 5",
+    "message_id": "wamid.HBgMMjAxMDEwNjcyNzIxFQIAERgSQ0YzRjkwMzlCNUYxNTQzNjZGAA==",
+    "timestamp": "2025-03-24T09:38:10.127057"
+  },
+  {
+    "success": true,
+    "phone": "201010981070",
+    "name": "Müşteri 6",
+    "message_id": "wamid.HBgMMjAxMDEwOTgxMDcwFQIAERgSRTc0N0JCNzgxREJDRTAzNkFEAA==",
+    "timestamp": "2025-03-24T09:38:10.939757"
+  },
+  {
+    "success": true,
+    "phone": "201011009906",
+    "name": "Müşteri 7",
+    "message_id": "wamid.HBgMMjAxMDExMDA5OTA2FQIAERgSRjFCNkI4MzE2RkFDMTY3NTg3AA==",
+    "timestamp": "2025-03-24T09:38:11.736313"
+  },
+  {
+    "success": true,
+    "phone": "201011113339",
+    "name": "Müşteri 8",
+    "message_id": "wamid.HBgMMjAxMDExMTEzMzM5FQIAERgSMjkzODkyMUVCNDBDRUNERkJFAA==",
+    "timestamp": "2025-03-24T09:38:12.440544"
+  },
+  {
+    "success": true,
+    "phone": "2010111510566",
+    "name": "Müşteri 9",
+    "message_id": "wamid.HBgNMjAxMDExMTUxMDU2NhUCABEYEjQ2RkE5NjJDNjE1QkVDRTM1NwA=",
+    "timestamp": "2025-03-24T09:38:13.217371"
+  },
+  {
+    "success": true,
+    "phone": "201011178607",
+    "name": "Müşteri 10",
+    "message_id": "wamid.HBgMMjAxMDExMTc4NjA3FQIAERgSNDZEMDM5RTY5RjlBRThBOUE2AA==",
+    "timestamp": "2025-03-24T09:38:13.927758"
+  },
+  {
+    "success": true,
+    "phone": "201011510566",
+    "name": "Müşteri 11",
+    "message_id": "wamid.HBgMMjAxMDExNTEwNTY2FQIAERgSRTRCMDRFQTdEN0NBM0EwQzU0AA==",
+    "timestamp": "2025-03-24T09:38:15.632691"
+  },
+  {
+    "success": true,
+    "phone": "201011624111",
+    "name": "Müşteri 12",
+    "message_id": "wamid.HBgMMjAxMDExNjI0MTExFQIAERgSMEUzNEI0NzM2M0VCMEMwMTYxAA==",
+    "timestamp": "2025-03-24T09:38:16.426485"
+  },
+  {
+    "success": true,
+    "phone": "201011850062",
+    "name": "Müşteri 13",
+    "message_id": "wamid.HBgMMjAxMDExODUwMDYyFQIAERgSNjMwOEJFRUQ0RTY0QzQxOTEzAA==",
+    "timestamp": "2025-03-24T09:38:17.130888"
+  },
+  {
+    "success": true,
+    "phone": "201012604800",
+    "name": "Müşteri 14",
+    "message_id": "wamid.HBgMMjAxMDEyNjA0ODAwFQIAERgSN0E4RDM3MERFRjBFOEUzQjM4AA==",
+    "timestamp": "2025-03-24T09:38:17.893461"
+  },
+  {
+    "success": true,
+    "phone": "201013312241",
+    "name": "Müşteri 15",
+    "message_id": "wamid.HBgMMjAxMDEzMzEyMjQxFQIAERgSNTQ4NDA3MDM4MjIwOEZDREE3AA==",
+    "timestamp": "2025-03-24T09:38:18.707454"
+  },
+  {
+    "success": true,
+    "phone": "201013537039",
+    "name": "Müşteri 16",
+    "message_id": "wamid.HBgMMjAxMDEzNTM3MDM5FQIAERgSQTE3QTY5QjE4NUNBRjVENkVDAA==",
+    "timestamp": "2025-03-24T09:38:19.398613"
+  },
+  {
+    "success": true,
+    "phone": "201014488659",
+    "name": "Müşteri 17",
+    "message_id": "wamid.HBgMMjAxMDE0NDg4NjU5FQIAERgSMkEzQ0VBRjAwRTNCOEYyNDRGAA==",
+    "timestamp": "2025-03-24T09:38:20.193829"
+  },
+  {
+    "success": true,
+    "phone": "201015020565",
+    "name": "Müşteri 18",
+    "message_id": "wamid.HBgMMjAxMDE1MDIwNTY1FQIAERgSNjVEQjU5QTg2MDIyMUQyMDZBAA==",
+    "timestamp": "2025-03-24T09:38:20.859386"
+  },
+  {
+    "success": true,
+    "phone": "201015101906",
+    "name": "Müşteri 19",
+    "message_id": "wamid.HBgMMjAxMDE1MTAxOTA2FQIAERgSMEMyODg4NzYzQTFBNjU3MjQ1AA==",
+    "timestamp": "2025-03-24T09:38:21.486040"
+  },
+  {
+    "success": true,
+    "phone": "201015630040",
+    "name": "Müşteri 20",
+    "message_id": "wamid.HBgMMjAxMDE1NjMwMDQwFQIAERgSNDM3N0ExMjNFOTNENTlCQzdFAA==",
+    "timestamp": "2025-03-24T09:38:22.232391"
+  }
+]
