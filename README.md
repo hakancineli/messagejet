@@ -21,8 +21,8 @@ Bu proje, WhatsApp üzerinden toplu template mesaj gönderimi yapmak için geli�
 
 1. Projeyi klonlayın:
 ```bash
-git clone https://github.com/kullaniciadi/whatsapp-template-sender.git
-cd whatsapp-template-sender
+git clone https://github.com/hakancineli/messagejet.git
+cd messagejet
 ```
 
 2. Gerekli paketleri yükleyin:
