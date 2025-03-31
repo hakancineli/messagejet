@@ -40,6 +40,24 @@ try:
         Column('status', String)
     )
 
+    # Veritabanını oluştur (eğer yoksa)
+    def create_database():
+        default_url = DATABASE_URL.rsplit('/', 1)[0] + '/postgres'
+        temp_engine = create_engine(default_url)
+        conn = temp_engine.connect()
+        conn.execute("commit")
+        try:
+            conn.execute(f"CREATE DATABASE messagejet_db")
+            logger.info("Database created successfully")
+        except Exception as e:
+            logger.info(f"Database already exists or error: {str(e)}")
+        finally:
+            conn.close()
+            temp_engine.dispose()
+
+    # Veritabanını oluşturmayı dene
+    create_database()
+
     # Test connection
     with engine.connect() as conn:
         conn.execute(select(1))
