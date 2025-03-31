@@ -6,4 +6,6 @@ gunicorn==21.2.0
 python-dotenv==1.0.1
 cachetools==5.3.3
 schedule==1.2.1
-pytz==2025.2 
+pytz==2025.2
+psycopg2-binary==2.9.9
+SQLAlchemy==2.0.28 
