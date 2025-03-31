@@ -1,1 +1,1 @@
-web: gunicorn -c gunicorn_config.py --log-level debug app:app 
+web: gunicorn app:app --bind 0.0.0.0:$PORT 
