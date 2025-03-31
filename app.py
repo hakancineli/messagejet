@@ -18,12 +18,14 @@ DATABASE_URL = os.environ.get('DATABASE_URL')
 if not DATABASE_URL:
     logger.error("DATABASE_URL environment variable is not set!")
     DATABASE_URL = 'postgresql://postgres:postgres@localhost:5432/messagejet'
+elif DATABASE_URL.startswith('postgres://'):
+    DATABASE_URL = DATABASE_URL.replace('postgres://', 'postgresql://', 1)
 
 logger.info(f"Using database URL: {DATABASE_URL.split('@')[1]}")  # URL'in hassas olmayan kısmını logla
 
 try:
     # SQLAlchemy engine
-    engine = create_engine(DATABASE_URL)
+    engine = create_engine(DATABASE_URL, pool_pre_ping=True)
     metadata = MetaData()
 
     # Mesajlar tablosu tanımı
