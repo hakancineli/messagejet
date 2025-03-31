@@ -43,7 +43,8 @@ def cache_response(cache, key_prefix=''):
 
 # Veritabanı bağlantısı
 def get_db():
-    db = sqlite3.connect('messagejet.db')
+    db_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'messagejet.db')
+    db = sqlite3.connect(db_path)
     db.row_factory = sqlite3.Row
     return db
 
