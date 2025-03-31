@@ -7,24 +7,112 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            margin: 40px;
-            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f2f5;
         }
         .container {
-            max-width: 800px;
+            max-width: 1200px;
             margin: 0 auto;
-            text-align: center;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
         h1 {
+            color: #008069;
+            margin-bottom: 20px;
+        }
+        .message-list {
+            margin-top: 20px;
+        }
+        .message {
+            padding: 15px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        .message:last-child {
+            border-bottom: none;
+        }
+        .message .phone {
+            font-weight: bold;
+            color: #008069;
+        }
+        .message .text {
+            margin-top: 5px;
             color: #333;
+        }
+        .message .time {
+            font-size: 0.8em;
+            color: #666;
+            margin-top: 5px;
+        }
+        .webhook-url {
+            background-color: #f5f5f5;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+            font-family: monospace;
+        }
+        .refresh-btn {
+            background-color: #008069;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            float: right;
+        }
+        .refresh-btn:hover {
+            background-color: #006d5b;
         }
     </style>
 </head>
 <body>
     <div class="container">
+        <button class="refresh-btn" onclick="refreshMessages()">Yenile</button>
         <h1>MessageJet</h1>
-        <p>WhatsApp mesaj yönetim sistemi aktif durumda.</p>
-        <p>Webhook URL: https://messagejet-1.onrender.com/webhook</p>
+        <div class="webhook-url">
+            Webhook URL: https://messagejet-1.onrender.com/webhook
+        </div>
+        <div class="message-list">
+            {% if messages %}
+                {% for message in messages %}
+                <div class="message">
+                    <div class="phone">{{ message.phone }}</div>
+                    <div class="text">{{ message.message }}</div>
+                    <div class="time">{{ message.timestamp }}</div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <p>Henüz mesaj yok.</p>
+            {% endif %}
+        </div>
     </div>
+
+    <script>
+        function refreshMessages() {
+            fetch('/messages')
+                .then(response => response.json())
+                .then(messages => {
+                    const messageList = document.querySelector('.message-list');
+                    if (messages.length === 0) {
+                        messageList.innerHTML = '<p>Henüz mesaj yok.</p>';
+                        return;
+                    }
+                    
+                    messageList.innerHTML = messages.map(msg => `
+                        <div class="message">
+                            <div class="phone">${msg.phone}</div>
+                            <div class="text">${msg.message}</div>
+                            <div class="time">${msg.timestamp}</div>
+                        </div>
+                    `).join('');
+                })
+                .catch(error => console.error('Error:', error));
+        }
+
+        // Her 30 saniyede bir mesajları yenile
+        setInterval(refreshMessages, 30000);
+    </script>
 </body>
 </html> 
