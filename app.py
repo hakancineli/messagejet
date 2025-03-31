@@ -113,7 +113,7 @@ init_db()
 # API Yapılandırması
 BASE_URL = "https://waba-v2.360dialog.io"
 API_KEY = "MISyrZTxjZFZTH52tF8M7hwSAK"
-WEBHOOK_URL = "https://9a04-151-135-80-53.ngrok-free.app/webhook"
+WEBHOOK_URL = "https://messagejet-1.onrender.com/webhook"
 CHANNEL_ID = "570676119468253"
 
 # Excel dosyaları için upload klasörü
