@@ -6,14 +6,21 @@ import json
 
 app = Flask(__name__)
 
+# Veritabanı dizini ve dosya yolu
+DB_DIR = 'data'
+DB_FILE = os.path.join(DB_DIR, 'messagejet.db')
+
 # Veritabanı bağlantısı
 def get_db():
-    db = sqlite3.connect('messagejet.db')
+    if not os.path.exists(DB_DIR):
+        os.makedirs(DB_DIR)
+    db = sqlite3.connect(DB_FILE)
     db.row_factory = sqlite3.Row
     return db
 
 # Veritabanı tablolarını oluştur
 def init_db():
+    print("Veritabanı tabloları oluşturuluyor...")
     with app.app_context():
         db = get_db()
         db.execute('''
@@ -27,6 +34,8 @@ def init_db():
             )
         ''')
         db.commit()
+    print("Veritabanı tabloları başarıyla oluşturuldu.")
+    print(f"Veritabanı dosyası: {DB_FILE}")
 
 # Uygulama başlangıcında gerekli dizinleri ve veritabanını oluştur
 for directory in ['templates', 'uploads', 'data']:
@@ -54,12 +63,15 @@ def verify_webhook():
 def webhook():
     try:
         data = request.get_json()
+        print(f"Gelen webhook verisi: {json.dumps(data, indent=2)}")
         
         # WhatsApp API'den gelen veriyi işle
         if 'messages' in data and len(data['messages']) > 0:
             message = data['messages'][0]
             phone = message.get('from', '')
             text = message.get('text', {}).get('body', '')
+            
+            print(f"Mesaj alındı - Telefon: {phone}, Mesaj: {text}")
             
             # Mesajı veritabanına kaydet
             db = get_db()
@@ -69,12 +81,14 @@ def webhook():
             )
             db.commit()
             
+            print("Mesaj veritabanına kaydedildi")
             return jsonify({"success": True, "message": "Message saved"})
         
         return jsonify({"success": True, "message": "No message data"})
     except Exception as e:
+        print(f"Hata oluştu: {str(e)}")
         return jsonify({"success": False, "error": str(e)}), 400
 
 if __name__ == '__main__':
-    port = int(os.environ.get('PORT', 3000))
-    app.run(host='0.0.0.0', port=port)
+    port = int(os.environ.get('PORT', 8080))  # Varsayılan portu 8080 olarak değiştirdim
+    app.run(host='0.0.0.0', port=port, debug=True)  # Debug modunu aktif ettim
