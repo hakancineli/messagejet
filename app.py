@@ -16,14 +16,6 @@ from cachetools import TTLCache
 
 app = Flask(__name__)
 
-# Dizinleri oluştur
-if not os.path.exists('templates'):
-    os.makedirs('templates')
-if not os.path.exists('uploads'):
-    os.makedirs('uploads')
-if not os.path.exists('data'):
-    os.makedirs('data')
-
 # Loglama seviyesini ayarla
 logging.basicConfig(
     level=logging.DEBUG,
@@ -51,8 +43,7 @@ def cache_response(cache, key_prefix=''):
 
 # Veritabanı bağlantısı
 def get_db():
-    db_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data', 'messagejet.db')
-    os.makedirs(os.path.dirname(db_path), exist_ok=True)
+    db_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'messagejet.db')
     db = sqlite3.connect(db_path)
     db.row_factory = sqlite3.Row
     return db
@@ -797,5 +788,8 @@ def serve_static(filename):
     return send_from_directory('static', filename)
 
 if __name__ == '__main__':
+    # templates klasörü yoksa oluştur
+    if not os.path.exists('templates'):
+        os.makedirs('templates')
     port = int(os.environ.get('PORT', 10000))
     app.run(host='0.0.0.0', port=port)
