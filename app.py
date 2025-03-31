@@ -787,7 +787,5 @@ def serve_static(filename):
     return send_from_directory('static', filename)
 
 if __name__ == '__main__':
-    # templates klasörü yoksa oluştur
-    if not os.path.exists('templates'):
-        os.makedirs('templates')
-    app.run(host='0.0.0.0', port=3000, debug=True)
+    port = int(os.environ.get('PORT', 8080))
+    app.run(host='0.0.0.0', port=port, debug=False)
