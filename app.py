@@ -1,12 +1,12 @@
-from flask import Flask, render_template, jsonify, request
+from flask import Flask, render_template, request, jsonify
 import os
 
 app = Flask(__name__)
 
-# Dizinleri oluştur
-os.makedirs('templates', exist_ok=True)
-os.makedirs('uploads', exist_ok=True)
-os.makedirs('data', exist_ok=True)
+# Gerekli dizinleri oluştur
+for directory in ['templates', 'uploads', 'data']:
+    if not os.path.exists(directory):
+        os.makedirs(directory)
 
 @app.route('/')
 def index():
@@ -19,11 +19,11 @@ def verify_webhook():
 @app.route('/webhook', methods=['POST'])
 def webhook():
     try:
-        data = request.json
-        return jsonify({"status": "success", "data": data})
+        data = request.get_json()
+        return jsonify({"success": True, "message": "Data received"})
     except Exception as e:
-        return jsonify({"status": "error", "message": str(e)})
+        return jsonify({"success": False, "error": str(e)}), 400
 
 if __name__ == '__main__':
-    port = int(os.environ.get('PORT', 10000))
+    port = int(os.environ.get('PORT', 3000))
     app.run(host='0.0.0.0', port=port)
